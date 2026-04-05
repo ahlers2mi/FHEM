@@ -59,6 +59,20 @@ async def get_devices(http):
 
 
 async def mqtt_action(account, password, device_name, iot_id, action, extra_params=None):
+    # Bugfix for pymammotion: get_ssl_context() does not await run_in_executor(),
+    # so CA certificates are never loaded -> CERTIFICATE_VERIFY_FAILED.
+    # Patch: load CA certificates synchronously.
+    import ssl as _ssl
+    from pymammotion.mqtt import aliyun_mqtt as _aliyun_mod
+
+    async def _fixed_get_ssl_context():
+        context = _ssl.SSLContext(_ssl.PROTOCOL_TLS_CLIENT)
+        context.options |= _ssl.OP_IGNORE_UNEXPECTED_EOF
+        context.load_verify_locations(cadata=_aliyun_mod._ALIYUN_BROKER_CA_DATA)
+        return context
+
+    _aliyun_mod.AliyunMQTT.get_ssl_context = staticmethod(_fixed_get_ssl_context)
+
     from pymammotion.mammotion.devices.mammotion import Mammotion
 
     Mammotion._instance = None
