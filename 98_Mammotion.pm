@@ -484,6 +484,7 @@ sub Mammotion_FetchDevices {
         $hash->{RUNNING} = 0;
         readingsSingleUpdate($hash, "state", "error", 1);
     } else {
+        # Watchdog: 30s buffer on top of the 60s BlockingCall timeout
         InternalTimer(gettimeofday() + 90, "Mammotion_WatchdogReset", $hash, 0);
     }
 }
@@ -524,6 +525,7 @@ sub Mammotion_SendCommand {
         $hash->{RUNNING} = 0;
         readingsSingleUpdate($hash, "state", "error", 1);
     } else {
+        # Watchdog: BlockingCall timeout + 30s buffer (180+30=210, 60+30=90, 90+30=120)
         my $watchdog_timeout = ($action =~ /^(get_zones|start_zone|get_tasks|start_task)$/) ? 210 :
                                ($action eq "get_status") ? 90 : 120;
         InternalTimer(gettimeofday() + $watchdog_timeout, "Mammotion_WatchdogReset", $hash, 0);
