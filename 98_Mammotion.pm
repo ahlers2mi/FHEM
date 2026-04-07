@@ -726,9 +726,30 @@ sub Mammotion_ProcessStatus {
     my $charge_text  = $charge_texts{$charge_state} // "unbekannt ($charge_state)";
 
     my %work_texts = (
-        0 => "idle", 1 => "mowing", 2 => "going_home",
-        3 => "charging", 4 => "emergency_stop", 5 => "paused",
-        6 => "park", 7 => "border"
+        0  => "nicht aktiv",
+        1  => "online",
+        2  => "offline",
+        8  => "deaktiviert",
+        10 => "initialisierung",
+        11 => "bereit",
+        12 => "nicht verbunden",
+        13 => "maeht",
+        14 => "faehrt_zur_station",
+        15 => "laedt",
+        16 => "update",
+        17 => "gesperrt",
+        19 => "pausiert",
+        20 => "manuelles_mähen",
+        22 => "update_erfolgreich",
+        23 => "ota_update_fehler",
+        31 => "bereich_einzeichnen",
+        32 => "hindernis_einzeichnen",
+        34 => "kanal_einzeichnen",
+        35 => "loeschen",
+        36 => "grenze_bearbeiten",
+        37 => "positionsfehler",
+        38 => "grenzueberschreitung",
+        39 => "ladepause",
     );
     my $work_text = $work_texts{$work_state} // "unbekannt ($work_state)";
 
