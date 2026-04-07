@@ -245,6 +245,9 @@ async def mqtt_action(account, password, device_name, iot_id, action, extra_para
             return {"ok": True, "action": "start_task", "plan_id": plan_id}
 
         elif action == "get_status":
+            await mammotion.send_command(device_name, "get_report_cfg")
+            await asyncio.sleep(5)
+
             mower = mammotion.mower(device_name)
             if mower is None:
                 return {"ok": False, "error": "Device state not available"}
